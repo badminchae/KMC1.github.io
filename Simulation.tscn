@@ -1,0 +1,83 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Shared/Tileset.tres" type="TileSet" id=1]
+[ext_resource path="res://Entities/Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Systems/Simulation.gd" type="Script" id=3]
+[ext_resource path="res://Systems/EntityPlacer.gd" type="Script" id=4]
+[ext_resource path="res://GUI/GUI.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Entities/Entities/BranchesEntity.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Entities/Entities/StoneEntity.tscn" type="PackedScene" id=7]
+[ext_resource path="res://NewPic/Rain_wallpaper_shootingstar2.png" type="Texture" id=10]
+[ext_resource path="res://NewPic/floor_dark.png" type="Texture" id=11]
+
+[node name="Simulation" type="Node"]
+script = ExtResource( 3 )
+
+[node name="GameWorld" type="Node2D" parent="."]
+scale = Vector2( 0.8, 0.8 )
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="GroundTiles" type="TileMap" parent="GameWorld"]
+position = Vector2( 0, 80 )
+scale = Vector2( 1.12, 1.3 )
+mode = 1
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 100, 50 )
+cell_quadrant_size = 17
+format = 1
+tile_data = PoolIntArray( -1, 1, 0, -65536, 1, 0, -65535, 1, 0, -65534, 1, 0, -65533, 1, 0, -65532, 1, 0, -65531, 1, 0, -65530, 1, 0, -65529, 1, 0, -65528, 1, 0, 65535, 1, 0, 8, 1, 0, 131071, 1, 0, 65537, 0, 0, 65538, 0, 0, 65539, 0, 0, 65540, 0, 0, 65541, 0, 0, 65542, 0, 0, 65543, 0, 0, 65544, 2, 0, 196607, 1, 0, 131073, 0, 0, 131074, 0, 0, 131075, 0, 0, 131076, 0, 0, 131077, 0, 0, 131078, 0, 0, 131079, 0, 0, 131080, 2, 0, 262143, 1, 0, 196609, 0, 0, 196610, 0, 0, 196611, 0, 0, 196612, 0, 0, 196613, 0, 0, 196614, 0, 0, 196615, 0, 0, 196616, 2, 0, 327679, 1, 0, 262145, 0, 0, 262146, 0, 0, 262147, 0, 0, 262148, 0, 0, 262149, 0, 0, 262150, 0, 0, 262151, 0, 0, 262152, 2, 0, 393215, 1, 0, 327681, 0, 0, 327682, 0, 0, 327683, 0, 0, 327684, 0, 0, 327685, 0, 0, 327686, 0, 0, 327687, 0, 0, 327688, 2, 0, 458751, 1, 0, 393217, 0, 0, 393218, 0, 0, 393219, 0, 0, 393220, 0, 0, 393221, 0, 0, 393222, 0, 0, 393223, 0, 0, 393224, 2, 0, 524287, 1, 0, 458753, 0, 0, 458754, 0, 0, 458755, 0, 0, 458756, 0, 0, 458757, 0, 0, 458758, 0, 0, 458759, 0, 0, 458760, 2, 0, 589823, 1, 0, 524288, 1, 0, 524289, 2, 0, 524290, 2, 0, 524291, 2, 0, 524292, 2, 0, 524293, 2, 0, 524294, 2, 0, 524295, 2, 0, 524296, 2, 0 )
+
+[node name="FlatEntities" type="YSort" parent="GameWorld"]
+scale = Vector2( 1, 1.18 )
+
+[node name="FloorDark" type="Sprite" parent="GameWorld"]
+position = Vector2( 1, 403 )
+texture = ExtResource( 11 )
+
+[node name="RainWallpaperShootingstar2" type="Sprite" parent="GameWorld"]
+position = Vector2( -2, 41 )
+texture = ExtResource( 10 )
+
+[node name="YSort" type="YSort" parent="GameWorld"]
+
+[node name="EntityPlacer" type="TileMap" parent="GameWorld/YSort"]
+mode = 1
+cell_size = Vector2( 100, 50 )
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+cell_y_sort = true
+format = 1
+script = ExtResource( 4 )
+
+[node name="Timer" type="Timer" parent="GameWorld/YSort/EntityPlacer"]
+process_mode = 0
+one_shot = true
+
+[node name="BranchesEntity3" parent="GameWorld/YSort/EntityPlacer" instance=ExtResource( 6 )]
+position = Vector2( -166, 340 )
+
+[node name="BranchesEntity4" parent="GameWorld/YSort/EntityPlacer" instance=ExtResource( 6 )]
+position = Vector2( -54, 531 )
+
+[node name="StoneEntity" parent="GameWorld/YSort/EntityPlacer" instance=ExtResource( 7 )]
+position = Vector2( -166, 403 )
+
+[node name="StoneEntity3" parent="GameWorld/YSort/EntityPlacer" instance=ExtResource( 7 )]
+position = Vector2( 170, 468 )
+
+[node name="Player" parent="GameWorld/YSort" instance=ExtResource( 2 )]
+position = Vector2( 0, 200 )
+
+[node name="Timer" type="Timer" parent="."]
+process_mode = 0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GUI" parent="CanvasLayer" instance=ExtResource( 5 )]
+debug_items = {
+"Battery": 4,
+"StirlingEngine": 4
+}
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
